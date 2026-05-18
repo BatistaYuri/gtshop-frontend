@@ -4,6 +4,7 @@ import { Play, Save } from "lucide-react";
 import { useState } from "react";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { BooleanToggleField } from "@/components/ui/boolean-toggle-field";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
@@ -75,15 +76,13 @@ function StockForm({
 
   return (
     <form className="max-w-2xl space-y-4" onSubmit={handleSubmit}>
-      <label className="flex w-full items-center gap-2.5 text-sm font-semibold text-foreground sm:w-fit">
-        <input
-          type="checkbox"
-          checked={enabled}
-          onChange={(event) => setEnabled(event.target.checked)}
-          className="size-4 rounded border-border text-primary"
-        />
-        Atualizar o estoque todos os dias
-      </label>
+      <BooleanToggleField
+        name="stock-automation-enabled"
+        label="Atualizar o estoque todos os dias"
+        value={enabled}
+        disabled={isSaving}
+        onChange={setEnabled}
+      />
 
       <label className="block space-y-1.5">
         <span className="text-sm font-semibold text-foreground">Produtos que serao atualizados</span>
@@ -131,7 +130,14 @@ function StockForm({
 }
 
 export default function StockPage() {
-  const { data, isLoading, isSaving, loadError, feedback, save } = useSettings();
+  const {
+    data,
+    isLoading,
+    isSaving,
+    loadError,
+    feedback,
+    save,
+  } = useSettings();
   const { runNow, isRunning, feedback: runFeedback } = useRunStockUpdate();
 
   return (
@@ -141,7 +147,7 @@ export default function StockPage() {
 
       {isLoading ? (
         <div className="flex items-center gap-3 rounded-2xl bg-white/72 px-4 py-5 text-sm text-foreground-soft">
-          <Spinner /> Carregando configuracoes de estoque...
+          <Spinner /> Carregando configuracoes da automacao...
         </div>
       ) : loadError ? (
         <Alert variant="danger" message={loadError} />
@@ -157,9 +163,9 @@ export default function StockPage() {
               Atualizar estoque
             </Button>
           </CardHeader>
-          <CardContent className="pt-0 pb-5">
+          <CardContent className="space-y-6 pt-0 pb-5">
             <StockForm
-              key={`${data.companyName}-${data.stockAutomationStockTarget}-${data.stockAutomationEnabled}-${data.stockAutomationProductIds.join("-")}-${data.stockAutomationStatuses.join("-")}`}
+              key={`${data.companyName}-${data.stockAutomationStockTarget}-${data.stockAutomationEnabled}-${data.flashSaleAutomationEnabled}-${data.stockAutomationProductIds.join("-")}-${data.stockAutomationStatuses.join("-")}`}
               settings={data}
               isSaving={isSaving}
               onSave={save}
@@ -167,7 +173,7 @@ export default function StockPage() {
           </CardContent>
         </Card>
       ) : (
-        <Alert variant="warning" message="A API nao retornou configuracoes de estoque para exibicao." />
+        <Alert variant="warning" message="A API nao retornou configuracoes da automacao para exibicao." />
       )}
     </div>
   );

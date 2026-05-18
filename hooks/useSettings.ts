@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { toErrorMessage } from "@/lib/errors";
 import { settingsService } from "@/services/settings-service";
-import type { SettingsResponse, UpdateStockAutomationRequest } from "@/types/api";
+import type { SettingsResponse, UpdateFlashSaleAutomationPayload, UpdateStockAutomationRequest } from "@/types/api";
 
 export function useSettings() {
   const [data, setData] = useState<SettingsResponse | null>(null);
@@ -11,6 +11,7 @@ export function useSettings() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [isSaving, startSaving] = useTransition();
+  const [isUpdatingFlashSaleAutomation, startUpdatingFlashSaleAutomation] = useTransition();
 
   const load = useCallback(async () => {
     setIsLoading(true);
@@ -20,7 +21,7 @@ export function useSettings() {
       const response = await settingsService.getSettings();
       setData(response);
     } catch (error) {
-      setLoadError(toErrorMessage(error, "Nao foi possivel carregar as configuracoes de estoque."));
+      setLoadError(toErrorMessage(error, "Nao foi possivel carregar as configuracoes da automacao."));
     } finally {
       setIsLoading(false);
     }
@@ -49,14 +50,35 @@ export function useSettings() {
     });
   }, []);
 
+  const saveFlashSaleAutomation = useCallback((payload: UpdateFlashSaleAutomationPayload) => {
+    setFeedback(null);
+
+    return new Promise<SettingsResponse>((resolve, reject) => {
+      startUpdatingFlashSaleAutomation(async () => {
+        try {
+          const response = await settingsService.updateFlashSaleAutomation(payload);
+          setData(response);
+          setFeedback({ type: "success", message: "Automacao de oferta relampago atualizada com sucesso." });
+          resolve(response);
+        } catch (error) {
+          const message = toErrorMessage(error, "Nao foi possivel atualizar a automacao de oferta relampago.");
+          setFeedback({ type: "error", message });
+          reject(error);
+        }
+      });
+    });
+  }, []);
+
   return {
     data,
     isLoading,
     isSaving,
+    isUpdatingFlashSaleAutomation,
     loadError,
     feedback,
     load,
     save,
+    saveFlashSaleAutomation,
     clearFeedback: () => setFeedback(null),
   };
 }

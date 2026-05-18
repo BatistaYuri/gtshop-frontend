@@ -1,18 +1,25 @@
 "use client";
 
 import { Bolt } from "lucide-react";
+import { FlashSalesLatestExecution } from "@/components/flash-sales/flash-sales-latest-execution";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Spinner } from "@/components/ui/spinner";
+import { useLatestFlashSaleExecution } from "@/hooks/useLatestFlashSaleExecution";
 import { useLatestExecution } from "@/hooks/useLatestExecution";
 import { useRunStockUpdate } from "@/hooks/useRunStockUpdate";
 import { compactMessage, formatDateTime, formatNumber, getJobUpdatedCount, humanizeStatus } from "@/lib/utils";
 
 export default function DashboardPage() {
   const { data: latestExecution, isLoading: isExecutionLoading, error: executionError, refresh } = useLatestExecution();
+  const {
+    data: latestFlashSaleExecution,
+    isLoading: isFlashSaleExecutionLoading,
+    error: flashSaleExecutionError,
+  } = useLatestFlashSaleExecution();
   const { runNow, isRunning, feedback } = useRunStockUpdate({ onCompleted: refresh });
 
   const updatedCount = getJobUpdatedCount(latestExecution || undefined);
@@ -98,6 +105,14 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
+      </section>
+
+      <section>
+        <FlashSalesLatestExecution
+          execution={latestFlashSaleExecution}
+          isLoading={isFlashSaleExecutionLoading}
+          error={flashSaleExecutionError}
+        />
       </section>
     </div>
   );

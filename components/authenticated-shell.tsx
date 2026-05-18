@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogOut, Menu, Settings2, Store, X } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, Settings2, Store, Zap, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LoadingScreen } from "@/components/ui/loading-screen";
@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 const navigation = [
   { href: ROUTES.dashboard, label: "Dashboard", icon: LayoutDashboard },
   { href: ROUTES.stock, label: "Estoque", icon: Settings2 },
+  { href: ROUTES.flashSales, label: "Oferta Relampago", icon: Zap },
   { href: ROUTES.shopee, label: "Shopee", icon: Store },
 ];
 
@@ -51,7 +52,11 @@ export function AuthenticatedShell({ children }: { children: React.ReactNode }) 
   const { user, isLoading, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const hasCompactHeader = pathname === ROUTES.dashboard || pathname === ROUTES.stock || pathname === ROUTES.shopee;
+  const hasCompactHeader =
+    pathname === ROUTES.dashboard ||
+    pathname === ROUTES.stock ||
+    pathname === ROUTES.flashSales ||
+    pathname === ROUTES.shopee;
 
   if (isLoading) {
     return <LoadingScreen label="Validando sessao ativa..." />;

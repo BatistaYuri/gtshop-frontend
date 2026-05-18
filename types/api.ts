@@ -16,6 +16,7 @@ export interface LoginResponse {
 export interface SettingsResponse {
   companyName: string;
   stockAutomationEnabled: boolean;
+  flashSaleAutomationEnabled: boolean;
   stockAutomationProductIds: number[];
   stockAutomationStatuses: string[];
   stockAutomationStockTarget: number;
@@ -26,6 +27,10 @@ export interface UpdateStockAutomationRequest {
   productIds?: number[];
   statuses?: string[];
   stockTarget?: number;
+}
+
+export interface UpdateFlashSaleAutomationPayload {
+  enabled: boolean;
 }
 
 export interface ShopeeAuthUrlResponse {
@@ -88,6 +93,38 @@ export interface RunNowResponse {
   startedAt?: string | null;
   finishedAt?: string | null;
   [key: string]: unknown;
+}
+
+export interface FlashSaleReplicationCreatedCampaign {
+  sourceDiscountId: number;
+  targetDiscountId: number;
+  discountName: string;
+}
+
+export interface FlashSaleExecution {
+  id: number;
+  startedAt: string;
+  finishedAt: string | null;
+  status: "RUNNING" | "SUCCESS" | "ERROR" | "PARTIAL_SUCCESS";
+  targetDate: string;
+  sourceCampaigns: number;
+  createdCampaigns: number;
+  skippedCampaigns: number;
+  createdDiscounts: FlashSaleReplicationCreatedCampaign[];
+  errorsCount: number;
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+export interface FlashSaleReplicationResponse {
+  skipped: boolean;
+  targetDate: string;
+  sourceCampaigns: number;
+  createdCampaigns: number;
+  skippedCampaigns: number;
+  created: FlashSaleReplicationCreatedCampaign[];
+  errors: string[];
+  execution: FlashSaleExecution | null;
 }
 
 export interface ApiErrorResponse {
