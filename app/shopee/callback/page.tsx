@@ -8,7 +8,7 @@ import { Alert } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { ROUTES } from "@/lib/constants";
-import { toErrorMessage } from "@/lib/errors";
+import { ApiError, toErrorMessage } from "@/lib/errors";
 import { shopeeService } from "@/services/shopee-service";
 import type { ShopeeCallbackPayload, ShopeeCallbackResponse } from "@/types/api";
 
@@ -67,7 +67,12 @@ function ShopeeCallbackContent() {
         }
       } catch (nextError) {
         if (!cancelled) {
-          setError(toErrorMessage(nextError, "Nao foi possivel confirmar o retorno da Shopee com o backend."));
+          const message =
+            nextError instanceof ApiError && nextError.status === 401
+              ? "Sua sessao expirou ou nao e mais valida. Faca login novamente para concluir a conexao com a Shopee."
+              : toErrorMessage(nextError, "Nao foi possivel confirmar o retorno da Shopee com o backend.");
+
+          setError(message);
         }
       } finally {
         if (!cancelled) {
@@ -88,16 +93,16 @@ function ShopeeCallbackContent() {
   const visibleSubmitting = callbackPayload ? isSubmitting : false;
 
   return (
-    <div className="page-shell flex min-h-screen items-center justify-center px-4 py-10">
+    <div className="page-shell flex min-h-screen items-start justify-center px-4 py-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:items-center sm:py-10">
       <Card className="w-full max-w-xl">
-        <CardHeader className="space-y-4">
+        <CardHeader className="space-y-4 p-5 sm:p-6">
           <BrandMark />
           <div className="space-y-2">
-            <CardTitle className="text-3xl">Confirmacao da Shopee</CardTitle>
+            <CardTitle className="text-2xl sm:text-3xl">Confirmacao da Shopee</CardTitle>
             <CardDescription>Estamos finalizando a conexao da sua loja com a Shopee.</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 px-5 pb-5 sm:px-6 sm:pb-6">
           {visibleSubmitting ? (
             <div className="flex items-center gap-3 rounded-2xl border border-border bg-white/70 px-4 py-4 text-sm text-foreground-soft">
               <Spinner /> Enviando os dados de autorizacao para o backend...
@@ -115,9 +120,14 @@ function ShopeeCallbackContent() {
           ) : null}
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Link href={ROUTES.dashboard} className="inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary-strong">
+            <Link href={ROUTES.dashboard} className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-2xl bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary-strong">
               Voltar para dashboard
             </Link>
+            {visibleError ? (
+              <Link href={ROUTES.login} className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-2xl border border-border px-4 text-sm font-semibold text-foreground transition hover:bg-white/70">
+                Ir para login
+              </Link>
+            ) : null}
           </div>
         </CardContent>
       </Card>
@@ -129,9 +139,9 @@ export default function ShopeeCallbackPage() {
   return (
     <Suspense
       fallback={
-        <div className="page-shell flex min-h-screen items-center justify-center px-4 py-10">
+        <div className="page-shell flex min-h-screen items-start justify-center px-4 py-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:items-center sm:py-10">
           <Card className="w-full max-w-xl">
-            <CardContent className="flex items-center gap-3 py-8 text-sm text-foreground-soft">
+            <CardContent className="flex items-center gap-3 px-5 py-8 text-sm text-foreground-soft sm:px-6">
               O retorno da Shopee esta sendo processado...
             </CardContent>
           </Card>

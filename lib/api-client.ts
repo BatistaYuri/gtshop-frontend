@@ -3,7 +3,43 @@
 import { clearSessionToken, getSessionToken } from "@/lib/auth/session";
 import { ApiError, getApiErrorPayload } from "@/lib/errors";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:3000";
+const DEFAULT_API_PORT = "3000";
+
+function replaceLoopbackHostname(baseUrl: string) {
+  if (typeof window === "undefined") {
+    return baseUrl;
+  }
+
+  try {
+    const parsedUrl = new URL(baseUrl);
+
+    if (!["localhost", "127.0.0.1", "::1"].includes(parsedUrl.hostname)) {
+      return baseUrl;
+    }
+
+    parsedUrl.hostname = window.location.hostname;
+    return parsedUrl.toString().replace(/\/$/, "");
+  } catch {
+    return baseUrl;
+  }
+}
+
+export function resolveApiBaseUrl() {
+  const configuredBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
+
+  if (configuredBaseUrl) {
+    return replaceLoopbackHostname(configuredBaseUrl);
+  }
+
+  if (typeof window !== "undefined") {
+    const { hostname, protocol } = window.location;
+    return `${protocol}//${hostname}:${DEFAULT_API_PORT}`;
+  }
+
+  return `http://localhost:${DEFAULT_API_PORT}`;
+}
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
@@ -41,12 +77,18 @@ function emitUnauthorized() {
 export async function apiRequest<T>(path: string, options: RequestOptions = {}) {
   const headers = new Headers(options.headers);
   const token = options.token ?? getSessionToken();
+  const requiresAuth = options.requiresAuth !== false;
+
+  if (requiresAuth && !token) {
+    emitUnauthorized();
+    throw new ApiError("Sua sessao expirou. Faca login novamente para continuar.", 401);
+  }
 
   if (options.body !== undefined) {
     headers.set("Content-Type", "application/json");
   }
 
-  if (options.requiresAuth !== false && token) {
+  if (requiresAuth && token) {
     headers.set("Authorization", `Bearer ${token}`);
   }
 
@@ -64,7 +106,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
     const message =
       errorPayload?.message || errorPayload?.error || response.statusText || "Erro inesperado na API.";
 
-    if (response.status === 401 && options.requiresAuth !== false) {
+    if (response.status === 401 && requiresAuth) {
       emitUnauthorized();
     }
 

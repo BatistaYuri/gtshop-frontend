@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useEffect, useMemo, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ROUTES } from "@/lib/constants";
 import { clearSessionToken, getSessionToken, persistSessionToken } from "@/lib/auth/session";
 import { toErrorMessage } from "@/lib/errors";
@@ -12,6 +12,7 @@ type AuthContextValue = {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isAuthenticating: boolean;
   error: string | null;
   login: (payload: LoginRequest) => Promise<AuthUser>;
   logout: (options?: { redirectTo?: string; silent?: boolean }) => void;
@@ -23,9 +24,9 @@ export const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const logout = useCallback(
@@ -57,12 +58,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(nextUser);
       setError(null);
     } catch (nextError) {
+      const isLoginRoute = typeof window !== "undefined" && window.location.pathname === ROUTES.login;
+
       setError(toErrorMessage(nextError, "Nao foi possivel validar sua sessao."));
-      logout({ silent: pathname === ROUTES.login, redirectTo: ROUTES.login });
+      logout({ silent: isLoginRoute, redirectTo: ROUTES.login });
     } finally {
       setIsLoading(false);
     }
-  }, [logout, pathname]);
+  }, [logout]);
 
   useEffect(() => {
     Promise.resolve().then(() => refreshUser());
@@ -78,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [logout]);
 
   const login = useCallback(async (payload: LoginRequest) => {
-    setIsLoading(true);
+    setIsAuthenticating(true);
     setError(null);
 
     try {
@@ -91,7 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(message);
       throw nextError;
     } finally {
-      setIsLoading(false);
+      setIsAuthenticating(false);
     }
   }, []);
 
@@ -100,13 +103,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       isAuthenticated: Boolean(user),
       isLoading,
+      isAuthenticating,
       error,
       login,
       logout,
       refreshUser,
       clearError: () => setError(null),
     }),
-    [error, isLoading, login, logout, refreshUser, user],
+    [error, isAuthenticating, isLoading, login, logout, refreshUser, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

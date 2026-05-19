@@ -111,7 +111,7 @@ function ShopeePageContent() {
               <p className="mt-2 text-sm leading-6 text-foreground-soft">
                 O frontend solicita a URL de autorizacao ao backend e redireciona o navegador para a Shopee.
               </p>
-              <Button className="mt-4" onClick={() => void connect()} disabled={isConnecting}>
+              <Button className="mt-4 w-full sm:w-auto" onClick={() => void connect()} disabled={isConnecting}>
                 {isConnecting ? <Spinner /> : <Link2 className="size-4" />}
                 Iniciar conexao
               </Button>
@@ -122,7 +122,7 @@ function ShopeePageContent() {
               <p className="mt-2 text-sm leading-6 text-foreground-soft">
                 Dispare o endpoint de renovacao manual e atualize o status logo em seguida.
               </p>
-              <Button className="mt-4" variant="secondary" onClick={() => void refreshToken()} disabled={isRefreshingToken}>
+              <Button className="mt-4 w-full sm:w-auto" variant="secondary" onClick={() => void refreshToken()} disabled={isRefreshingToken}>
                 {isRefreshingToken ? <Spinner /> : <RefreshCcw className="size-4" />}
                 Atualizar token agora
               </Button>

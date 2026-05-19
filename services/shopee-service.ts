@@ -24,7 +24,6 @@ export const shopeeService = {
     return apiRequest<ShopeeCallbackResponse>("/shopee/callback", {
       method: "POST",
       body: payload,
-      requiresAuth: false,
     });
   },
 };

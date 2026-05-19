@@ -33,12 +33,12 @@ export default function FlashSalesPage() {
         <Alert variant="danger" message={loadError} />
       ) : data ? (
         <Card>
-          <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+          <CardHeader className="flex flex-col gap-4 space-y-0 md:flex-row md:items-start md:justify-between">
             <div className="space-y-2">
               <CardTitle className="text-2xl">Oferta Relampago</CardTitle>
               <CardDescription>Configure a automacao diaria de oferta relampago.</CardDescription>
             </div>
-            <Button type="button" className="sm:self-start" onClick={() => void runReplication()} disabled={isRunning}>
+            <Button type="button" className="w-full md:w-auto md:self-start" onClick={() => void runReplication()} disabled={isRunning}>
               {isRunning ? <Spinner /> : <Play className="size-4" />}
               Atualizar oferta relampago
             </Button>

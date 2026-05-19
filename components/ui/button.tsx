@@ -41,7 +41,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+        "inline-flex touch-manipulation items-center justify-center gap-2 rounded-2xl font-semibold transition duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
         variantClasses[variant],
         sizeClasses[size],
         fullWidth && "w-full",

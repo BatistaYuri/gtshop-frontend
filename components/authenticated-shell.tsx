@@ -67,7 +67,7 @@ export function AuthenticatedShell({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <div className="page-shell min-h-screen px-4 py-4 md:px-6 md:py-6">
+    <div className="page-shell min-h-screen px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] md:px-6 md:py-6">
       <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-[1600px] gap-4 lg:min-h-[calc(100vh-3rem)] lg:gap-6">
         <aside className="glass-panel soft-scrollbar hidden w-[290px] shrink-0 rounded-[32px] p-6 lg:block">
           <div className="space-y-3">
@@ -82,19 +82,21 @@ export function AuthenticatedShell({ children }: { children: React.ReactNode }) 
               <Button
                 variant="subtle"
                 size="sm"
-                className="glass-panel rounded-2xl"
+                className="glass-panel size-11 rounded-2xl p-0"
+                aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
                 onClick={() => setIsMobileMenuOpen((current) => !current)}
               >
                 {isMobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
               </Button>
             </div>
           ) : (
-            <header className="glass-panel flex items-center justify-between gap-3 rounded-[28px] px-4 py-4 md:px-6">
+            <header className="glass-panel flex items-start justify-between gap-3 rounded-[28px] px-4 py-4 md:items-center md:px-6">
               <div className="flex items-center gap-3">
                 <Button
                   variant="subtle"
                   size="sm"
-                  className="lg:hidden"
+                  className="size-11 p-0 lg:hidden"
+                  aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
                   onClick={() => setIsMobileMenuOpen((current) => !current)}
                 >
                   {isMobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}

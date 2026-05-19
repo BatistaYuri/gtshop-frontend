@@ -120,7 +120,7 @@ function StockForm({
       {validationError ? <Alert variant="warning" message={validationError} /> : null}
 
       <div className="flex flex-col gap-2.5 sm:flex-row">
-        <Button type="submit" disabled={isSaving}>
+        <Button type="submit" className="w-full sm:w-auto" disabled={isSaving}>
           {isSaving ? <Spinner /> : <Save className="size-4" />}
           Salvar configuracoes
         </Button>
@@ -153,12 +153,12 @@ export default function StockPage() {
         <Alert variant="danger" message={loadError} />
       ) : data ? (
         <Card>
-          <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+          <CardHeader className="flex flex-col gap-4 space-y-0 md:flex-row md:items-start md:justify-between">
             <div className="space-y-2">
               <CardTitle className="text-2xl">Estoque</CardTitle>
               <CardDescription>Configure os parametros enviados ao backend para a rotina automatica de estoque.</CardDescription>
             </div>
-            <Button type="button" className="sm:self-start" onClick={() => void runNow()} disabled={isRunning}>
+            <Button type="button" className="w-full md:w-auto md:self-start" onClick={() => void runNow()} disabled={isRunning}>
               {isRunning ? <Spinner /> : <Play className="size-4" />}
               Atualizar estoque
             </Button>

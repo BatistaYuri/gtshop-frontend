@@ -14,7 +14,7 @@ import { safeRedirectPath } from "@/lib/utils";
 
 export function LoginForm({ redirectTo }: { redirectTo?: string }) {
   const router = useRouter();
-  const { login, isLoading, error, clearError } = useAuth();
+  const { login, isAuthenticating, error, clearError } = useAuth();
   const [form, setForm] = useState({ username: "", password: "" });
   const [validationError, setValidationError] = useState<string | null>(null);
 
@@ -43,21 +43,21 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
   }
 
   return (
-    <div className="page-shell flex min-h-screen items-center justify-center px-4 py-10 md:px-6">
+    <div className="page-shell flex min-h-dvh items-center justify-center px-4 py-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:py-10 md:px-6">
       <div className="w-full max-w-xl">
         <Card>
-          <CardHeader className="space-y-4">
-            <div className="flex items-center justify-between gap-3">
+          <CardHeader className="space-y-4 p-5 sm:p-6">
+            <div className="flex items-start justify-between gap-3 sm:items-center">
               <div>
-                <CardTitle className="text-3xl">Entrar</CardTitle>
+                <CardTitle className="text-2xl sm:text-3xl">Entrar</CardTitle>
                 <CardDescription>Use as credenciais do painel administrativo para continuar.</CardDescription>
               </div>
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-foreground text-white">
+              <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-foreground text-white sm:size-12">
                 <LockKeyhole className="size-5" />
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-5 pb-5 sm:px-6 sm:pb-6">
             <form className="space-y-5" onSubmit={handleSubmit}>
               <label className="block space-y-2">
                 <span className="text-sm font-semibold text-foreground">Username</span>
@@ -101,8 +101,8 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
               {validationError ? <Alert variant="warning" message={validationError} /> : null}
               {error ? <Alert variant="danger" message={error} /> : null}
 
-              <Button type="submit" fullWidth size="lg" disabled={isLoading}>
-                {isLoading ? <Spinner /> : <ArrowRight className="size-4" />}
+              <Button type="submit" fullWidth size="lg" disabled={isAuthenticating} className="min-h-12">
+                {isAuthenticating ? <Spinner /> : <ArrowRight className="size-4" />}
                 Acessar painel
               </Button>
             </form>

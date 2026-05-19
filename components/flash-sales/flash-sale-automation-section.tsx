@@ -33,7 +33,7 @@ export function FlashSaleAutomationSection({
       />
 
       <div className="flex flex-col gap-2.5 sm:flex-row">
-        <Button type="submit" disabled={isSaving}>
+        <Button type="submit" className="w-full sm:w-auto" disabled={isSaving}>
           {isSaving ? <Spinner /> : <Save className="size-4" />}
           Salvar configuracoes
         </Button>
