@@ -65,6 +65,5 @@ export function useReplicateFlashSales(options?: { onCompleted?: (execution: Fla
     isRunning,
     result,
     runReplication,
-    clearFeedback: () => setFeedback(null),
   };
 }

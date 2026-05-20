@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toErrorMessage } from "@/lib/errors";
 import { shopeeService } from "@/services/shopee-service";
 import type { ShopeeStatusResponse } from "@/types/api";
@@ -10,7 +10,7 @@ export function useShopeeStatus() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
-  const [isRefreshingToken, startRefreshingToken] = useTransition();
+  const [isRefreshingToken, setIsRefreshingToken] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
 
   const load = useCallback(async () => {
@@ -49,28 +49,25 @@ export function useShopeeStatus() {
     }
   }, []);
 
-  const refreshToken = useCallback(() => {
+  const refreshToken = useCallback(async () => {
     setFeedback(null);
+    setIsRefreshingToken(true);
 
-    return new Promise<void>((resolve, reject) => {
-      startRefreshingToken(async () => {
-        try {
-          const response = await shopeeService.refreshToken();
-          const message =
-            (typeof response === "object" && "message" in response && typeof response.message === "string"
-              ? response.message
-              : undefined) || "Token Shopee atualizado com sucesso.";
+    try {
+      const response = await shopeeService.refreshToken();
+      const message =
+        (typeof response === "object" && "message" in response && typeof response.message === "string"
+          ? response.message
+          : undefined) || "Token Shopee atualizado com sucesso.";
 
-          await load();
-          setFeedback({ type: "success", message });
-          resolve();
-        } catch (nextError) {
-          const message = toErrorMessage(nextError, "Nao foi possivel atualizar o token da Shopee.");
-          setFeedback({ type: "error", message });
-          reject(nextError);
-        }
-      });
-    });
+      await load();
+      setFeedback({ type: "success", message });
+    } catch (nextError) {
+      const message = toErrorMessage(nextError, "Nao foi possivel atualizar o token da Shopee.");
+      setFeedback({ type: "error", message });
+    } finally {
+      setIsRefreshingToken(false);
+    }
   }, [load]);
 
   return {
@@ -83,6 +80,5 @@ export function useShopeeStatus() {
     refresh: load,
     connect,
     refreshToken,
-    clearFeedback: () => setFeedback(null),
   };
 }

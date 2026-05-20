@@ -2,7 +2,7 @@ import type { HTMLAttributes } from "react";
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type AlertVariant = "info" | "success" | "warning" | "danger";
+export type AlertVariant = "info" | "success" | "warning" | "danger";
 
 const variantClasses: Record<AlertVariant, string> = {
   info: "border-primary/20 bg-primary/8 text-primary",

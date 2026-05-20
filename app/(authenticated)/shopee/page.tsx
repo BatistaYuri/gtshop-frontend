@@ -7,6 +7,8 @@ import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FeedbackAlert } from "@/components/ui/feedback-alert";
+import { InlineLoading } from "@/components/ui/inline-loading";
 import { Spinner } from "@/components/ui/spinner";
 import { useShopeeStatus } from "@/hooks/useShopeeStatus";
 import { compactMessage, formatDateTime, getShopeeConnected, humanizeStatus } from "@/lib/utils";
@@ -38,7 +40,7 @@ function ShopeePageContent() {
   return (
     <div className="space-y-6">
       {callbackAlert ? <Alert variant={callbackAlert.type} message={callbackAlert.message} /> : null}
-      {feedback ? <Alert variant={feedback.type === "success" ? "success" : "danger"} message={feedback.message} /> : null}
+      <FeedbackAlert feedback={feedback} />
 
       <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
         <Card>
@@ -50,9 +52,7 @@ function ShopeePageContent() {
           </CardHeader>
           <CardContent className="space-y-4">
             {isLoading ? (
-              <div className="flex items-center gap-3 rounded-2xl bg-white/72 px-4 py-5 text-sm text-foreground-soft">
-                <Spinner /> Carregando status da Shopee...
-              </div>
+              <InlineLoading label="Carregando status da Shopee..." />
             ) : error ? (
               <Alert variant="danger" message={error} />
             ) : (
@@ -138,9 +138,7 @@ export default function ShopeePage() {
   return (
     <Suspense
       fallback={
-        <div className="flex items-center gap-3 rounded-2xl bg-white/72 px-4 py-5 text-sm text-foreground-soft">
-          <Spinner /> Carregando modulo Shopee...
-        </div>
+        <InlineLoading label="Carregando modulo Shopee..." />
       }
     >
       <ShopeePageContent />

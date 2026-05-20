@@ -1,4 +1,3 @@
-export const APP_NAME = "GTShop Admin";
 export const SESSION_COOKIE_NAME = "gtshop_admin_token";
 export const SESSION_DURATION_SECONDS = 60 * 60 * 8;
 
@@ -13,4 +12,3 @@ export const ROUTES = {
 
 export const PUBLIC_ROUTES = new Set<string>([ROUTES.login, ROUTES.shopeeCallback]);
 
-export const DEFAULT_AUTOMATION_STATUSES = ["NORMAL"];

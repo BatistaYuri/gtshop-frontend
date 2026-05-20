@@ -10,12 +10,6 @@ export function useLatestFlashSaleExecution() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const setExecution = useCallback((execution: FlashSaleExecution | null) => {
-    setData(execution);
-    setError(null);
-    setIsLoading(false);
-  }, []);
-
   const load = useCallback(async () => {
     setError(null);
 
@@ -38,6 +32,5 @@ export function useLatestFlashSaleExecution() {
     isLoading,
     error,
     refresh: load,
-    setExecution,
   };
 }

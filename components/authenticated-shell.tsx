@@ -51,12 +51,6 @@ function NavigationLinks({ onNavigate }: { onNavigate?: () => void }) {
 export function AuthenticatedShell({ children }: { children: React.ReactNode }) {
   const { user, isLoading, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
-  const hasCompactHeader =
-    pathname === ROUTES.dashboard ||
-    pathname === ROUTES.stock ||
-    pathname === ROUTES.flashSales ||
-    pathname === ROUTES.shopee;
 
   if (isLoading) {
     return <LoadingScreen label="Validando sessao ativa..." />;
@@ -77,39 +71,17 @@ export function AuthenticatedShell({ children }: { children: React.ReactNode }) 
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col gap-4 lg:gap-6">
-          {hasCompactHeader ? (
-            <div className="lg:hidden">
-              <Button
-                variant="subtle"
-                size="sm"
-                className="glass-panel size-11 rounded-2xl p-0"
-                aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
-                onClick={() => setIsMobileMenuOpen((current) => !current)}
-              >
-                {isMobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
-              </Button>
-            </div>
-          ) : (
-            <header className="glass-panel flex items-start justify-between gap-3 rounded-[28px] px-4 py-4 md:items-center md:px-6">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="subtle"
-                  size="sm"
-                  className="size-11 p-0 lg:hidden"
-                  aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
-                  onClick={() => setIsMobileMenuOpen((current) => !current)}
-                >
-                  {isMobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
-                </Button>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-foreground-soft">Painel administrativo</p>
-                  <h1 className="text-2xl font-semibold">Operacao Shopee</h1>
-                </div>
-              </div>
-
-              <p className="hidden text-sm text-foreground-soft md:block">Visao geral da operacao e acessos rapidos.</p>
-            </header>
-          )}
+          <div className="lg:hidden">
+            <Button
+              variant="subtle"
+              size="sm"
+              className="glass-panel size-11 rounded-2xl p-0"
+              aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+              onClick={() => setIsMobileMenuOpen((current) => !current)}
+            >
+              {isMobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+            </Button>
+          </div>
 
           {isMobileMenuOpen ? (
             <div className="glass-panel rounded-[28px] p-4 lg:hidden">

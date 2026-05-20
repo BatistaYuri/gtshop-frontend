@@ -9,7 +9,7 @@ export function useSettings() {
   const [data, setData] = useState<SettingsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [feedback, setFeedback] = useState<{ type: "success" | "warning" | "error"; message: string } | null>(null);
   const [isSaving, startSaving] = useTransition();
   const [isUpdatingFlashSaleAutomation, startUpdatingFlashSaleAutomation] = useTransition();
 
@@ -79,6 +79,5 @@ export function useSettings() {
     load,
     save,
     saveFlashSaleAutomation,
-    clearFeedback: () => setFeedback(null),
   };
 }

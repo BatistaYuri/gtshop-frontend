@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { InlineLoading } from "@/components/ui/inline-loading";
 import { Spinner } from "@/components/ui/spinner";
 import { useLatestFlashSaleExecution } from "@/hooks/useLatestFlashSaleExecution";
 import { useLatestExecution } from "@/hooks/useLatestExecution";
@@ -44,9 +45,7 @@ export default function DashboardPage() {
             ) : null}
 
             {isExecutionLoading ? (
-              <div className="flex items-center gap-3 rounded-2xl bg-white/70 px-4 py-5 text-sm text-foreground-soft">
-                <Spinner /> Carregando ultima execucao...
-              </div>
+              <InlineLoading label="Carregando ultima execucao..." />
             ) : executionError ? (
               <Alert variant="danger" message={executionError} />
             ) : !latestExecution ? (

@@ -127,6 +127,35 @@ export interface FlashSaleReplicationResponse {
   execution: FlashSaleExecution | null;
 }
 
+export interface StockUpdateHistoryItem {
+  id: number;
+  executionId: number;
+  userId: number;
+  itemId: number;
+  modelId: number | null;
+  productName: string;
+  modelName: string;
+  stockBefore: number;
+  stockAfter: number;
+  stockChange: number;
+  createdAt: string;
+}
+
+export interface PaginatedStockHistory {
+  items: StockUpdateHistoryItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface ExecutionSummary {
+  id: number;
+  startedAt: string;
+  finishedAt: string | null;
+  status: string;
+  productsUpdated: number;
+}
+
 export interface ApiErrorResponse {
   message?: string;
   error?: string;
@@ -134,6 +163,3 @@ export interface ApiErrorResponse {
   details?: unknown;
 }
 
-export interface HealthResponse {
-  status: "ok" | string;
-}

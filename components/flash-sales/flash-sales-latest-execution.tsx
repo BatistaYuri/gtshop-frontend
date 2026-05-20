@@ -3,7 +3,7 @@ import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Spinner } from "@/components/ui/spinner";
+import { InlineLoading } from "@/components/ui/inline-loading";
 import { compactMessage, formatDateTime, humanizeStatus } from "@/lib/utils";
 import type { FlashSaleExecution } from "@/types/api";
 
@@ -38,9 +38,7 @@ export function FlashSalesLatestExecution({
       </CardHeader>
       <CardContent className="space-y-4">
         {isLoading ? (
-          <div className="flex items-center gap-3 rounded-2xl bg-white/70 px-4 py-5 text-sm text-foreground-soft">
-            <Spinner /> Carregando ultima execucao...
-          </div>
+          <InlineLoading label="Carregando ultima execucao..." />
         ) : error ? (
           <Alert variant="danger" message={error} />
         ) : !execution ? (

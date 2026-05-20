@@ -5,6 +5,8 @@ import { FlashSaleAutomationSection } from "@/components/flash-sales/flash-sale-
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FeedbackAlert } from "@/components/ui/feedback-alert";
+import { InlineLoading } from "@/components/ui/inline-loading";
 import { Spinner } from "@/components/ui/spinner";
 import { useReplicateFlashSales } from "@/hooks/useReplicateFlashSales";
 import { useSettings } from "@/hooks/useSettings";
@@ -22,13 +24,11 @@ export default function FlashSalesPage() {
 
   return (
     <div className="space-y-6">
-      {feedback ? <Alert variant={feedback.type === "success" ? "success" : "danger"} message={feedback.message} /> : null}
-      {runFeedback ? <Alert variant={runFeedback.type === "error" ? "danger" : runFeedback.type} message={runFeedback.message} /> : null}
+      <FeedbackAlert feedback={feedback} />
+      <FeedbackAlert feedback={runFeedback} />
 
       {isLoading ? (
-        <div className="flex items-center gap-3 rounded-2xl bg-white/72 px-4 py-5 text-sm text-foreground-soft">
-          <Spinner /> Carregando configuracoes da automacao...
-        </div>
+        <InlineLoading label="Carregando configuracoes da automacao..." />
       ) : loadError ? (
         <Alert variant="danger" message={loadError} />
       ) : data ? (

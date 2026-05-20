@@ -47,13 +47,6 @@ export function parseNumberList(rawValue: string) {
     .filter((item) => Number.isFinite(item));
 }
 
-export function parseStringList(rawValue: string) {
-  return rawValue
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
 export function compactMessage(message?: string | null, fallback = "Sem detalhes adicionais") {
   return message?.trim() || fallback;
 }

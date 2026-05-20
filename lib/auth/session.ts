@@ -38,6 +38,3 @@ export function clearSessionToken() {
   document.cookie = `${SESSION_COOKIE_NAME}=; Path=/; Max-Age=0; SameSite=Lax`;
 }
 
-export function hasSessionToken() {
-  return Boolean(getSessionToken());
-}

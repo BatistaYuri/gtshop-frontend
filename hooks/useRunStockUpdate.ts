@@ -43,6 +43,5 @@ export function useRunStockUpdate(options?: { onCompleted?: () => Promise<void> 
     isRunning,
     feedback,
     runNow,
-    clearFeedback: () => setFeedback(null),
   };
 }
