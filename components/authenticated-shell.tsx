@@ -63,10 +63,17 @@ export function AuthenticatedShell({ children }: { children: React.ReactNode }) 
   return (
     <div className="page-shell min-h-screen px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] md:px-6 md:py-6">
       <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-[1600px] gap-4 lg:min-h-[calc(100vh-3rem)] lg:gap-6">
-        <aside className="glass-panel soft-scrollbar hidden w-[290px] shrink-0 rounded-[32px] p-6 lg:block">
+        <aside className="glass-panel soft-scrollbar hidden w-[290px] shrink-0 rounded-[32px] p-6 lg:flex lg:flex-col">
           <div className="space-y-3">
             <p className="text-xs uppercase tracking-[0.22em] text-foreground-soft">Navegacao</p>
             <NavigationLinks />
+          </div>
+
+          <div className="mt-auto pt-6">
+            <Button variant="ghost" className="w-full justify-start" onClick={() => logout()}>
+              <LogOut className="size-4" />
+              Sair
+            </Button>
           </div>
         </aside>
 

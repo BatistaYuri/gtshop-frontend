@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { Play } from "lucide-react";
+import { SingleStockUpdate } from "@/components/stock/single-stock-update";
 import { StockExecutionSummary } from "@/components/stock/stock-execution-summary";
 import { StockHistoryFilters, type StockHistoryFiltersState } from "@/components/stock/stock-history-filters";
 import { StockHistoryTable } from "@/components/stock/stock-history-table";
@@ -87,7 +88,10 @@ export default function StockPage() {
       ) : loadError ? (
         <Alert variant="danger" message={loadError} />
       ) : data ? (
-        <Card>
+        <>
+          <SingleStockUpdate defaultStockTarget={data.stockAutomationStockTarget} />
+
+          <Card>
           <CardHeader className="flex flex-col gap-4 space-y-0 md:flex-row md:items-start md:justify-between">
             <div className="space-y-2">
               <CardTitle className="text-2xl">Estoque</CardTitle>
@@ -105,8 +109,9 @@ export default function StockPage() {
               isSaving={isSaving}
               onSave={save}
             />
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </>
       ) : (
         <Alert variant="warning" message="A API nao retornou configuracoes da automacao para exibicao." />
       )}

@@ -14,4 +14,9 @@ export const authService = {
   getMe() {
     return apiRequest<AuthUser>("/auth/me");
   },
+  logout() {
+    return apiRequest<void>("/auth/logout", {
+      method: "POST",
+    });
+  },
 };

@@ -30,7 +30,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   const logout = useCallback(
-    (options?: { redirectTo?: string; silent?: boolean }) => {
+    async (options?: { redirectTo?: string; silent?: boolean }) => {
+      try {
+        await authService.logout();
+      } catch {
+        // Best-effort: proceed with local cleanup even if the server call fails
+      }
+
       clearSessionToken();
       setUser(null);
       setError(null);

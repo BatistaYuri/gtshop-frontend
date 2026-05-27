@@ -94,9 +94,9 @@ export function FlashSalesLatestExecution({
 
             <FlashSalesCreatedCampaignsList
               campaigns={execution.createdDiscounts}
-              title="Descontos criados na ultima execucao"
+              title="Ofertas criadas na ultima execucao"
               description="Itens persistidos no historico da ultima execucao da rotina."
-              emptyMessage="Nenhum desconto foi criado na ultima execucao registrada."
+              emptyMessage="Nenhuma oferta foi criada na ultima execucao registrada."
             />
           </>
         )}

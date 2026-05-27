@@ -5,7 +5,11 @@ import type {
   ExecutionSummary,
   LatestJobExecutionResponse,
   PaginatedStockHistory,
+  ProductItem,
+  ProductModel,
   RunNowResponse,
+  SingleStockUpdatePayload,
+  SingleStockUpdateResponse,
 } from "@/types/api";
 
 export interface StockUpdateHistoryParams {
@@ -45,5 +49,17 @@ export const jobsService = {
   },
   getExecutionsList() {
     return apiRequest<ExecutionSummary[]>("/jobs/update-stock/executions");
+  },
+  getProducts() {
+    return apiRequest<ProductItem[]>("/jobs/update-stock/products");
+  },
+  getProductModels(itemId: number) {
+    return apiRequest<ProductModel[]>(`/jobs/update-stock/products/${itemId}/models`);
+  },
+  updateSingleStock(payload: SingleStockUpdatePayload) {
+    return apiRequest<SingleStockUpdateResponse>("/jobs/update-stock/single", {
+      method: "POST",
+      body: payload,
+    });
   },
 };

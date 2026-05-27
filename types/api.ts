@@ -91,10 +91,27 @@ export interface RunNowResponse {
   partialFailure?: boolean;
   error?: string | null;
   startedAt?: string | null;
-  finishedAt?: string | null;
   [key: string]: unknown;
 }
 
+/**
+ * Represents an item in the `created` array of the POST /api/jobs/flash-sales/replicate-next-day response.
+ *
+ * The API now uses Flash Sale naming (sourceFlashSaleId, targetFlashSaleId, flashSaleName)
+ * instead of Discount naming.
+ */
+export interface FlashSaleReplicationCreatedItem {
+  sourceFlashSaleId: number;
+  targetFlashSaleId: number;
+  flashSaleName: string;
+}
+
+/**
+ * Represents a created discount persisted inside a FlashSaleExecution.
+ *
+ * The database still uses Discount naming (sourceDiscountId, targetDiscountId, discountName).
+ * No migration was performed, so these field names remain unchanged.
+ */
 export interface FlashSaleReplicationCreatedCampaign {
   sourceDiscountId: number;
   targetDiscountId: number;
@@ -122,7 +139,7 @@ export interface FlashSaleReplicationResponse {
   sourceCampaigns: number;
   createdCampaigns: number;
   skippedCampaigns: number;
-  created: FlashSaleReplicationCreatedCampaign[];
+  created: FlashSaleReplicationCreatedItem[];
   errors: string[];
   execution: FlashSaleExecution | null;
 }
@@ -156,10 +173,40 @@ export interface ExecutionSummary {
   productsUpdated: number;
 }
 
+export interface ProductItem {
+  itemId: number;
+  itemName: string;
+  itemStatus: string;
+  hasModel: boolean;
+}
+
+export interface ProductModelSellerStock {
+  sellerName: string;
+  stock: number;
+}
+
+export interface ProductModel {
+  modelId: number;
+  modelName: string;
+  stock: number;
+  sellerStocks: ProductModelSellerStock[];
+}
+
+export interface SingleStockUpdatePayload {
+  itemId: number;
+  modelId?: number;
+  stockTarget?: number;
+}
+
+export interface SingleStockUpdateResponse {
+  skipped: boolean;
+  execution: LatestJobExecutionResponse | null;
+  stockTarget: number;
+}
+
 export interface ApiErrorResponse {
   message?: string;
   error?: string;
   statusCode?: number;
   details?: unknown;
 }
-

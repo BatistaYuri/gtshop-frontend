@@ -5,6 +5,8 @@ import { ApiError, getApiErrorPayload } from "@/lib/errors";
 
 const DEFAULT_API_PORT = "3000";
 
+const inflightRequests = new Map<string, Promise<unknown>>();
+
 function replaceLoopbackHostname(baseUrl: string) {
   if (typeof window === "undefined") {
     return baseUrl;
@@ -74,7 +76,7 @@ function emitUnauthorized() {
   window.dispatchEvent(new CustomEvent("auth:unauthorized"));
 }
 
-export async function apiRequest<T>(path: string, options: RequestOptions = {}) {
+async function executeRequest<T>(path: string, options: RequestOptions): Promise<T> {
   const headers = new Headers(options.headers);
   const token = options.token ?? getSessionToken();
   const requiresAuth = options.requiresAuth !== false;
@@ -114,4 +116,27 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
   }
 
   return payload as T;
+}
+
+export async function apiRequest<T>(path: string, options: RequestOptions = {}) {
+  const method = options.method ?? "GET";
+  const dedupKey = `${method}:${path}`;
+
+  // Deduplicate in-flight GET requests to prevent duplicate network calls
+  // caused by React Strict Mode double-invoking effects in development.
+  if (method === "GET") {
+    const existing = inflightRequests.get(dedupKey) as Promise<T> | undefined;
+    if (existing) {
+      return existing;
+    }
+  }
+
+  const promise = executeRequest<T>(path, options);
+
+  if (method === "GET") {
+    inflightRequests.set(dedupKey, promise);
+    promise.finally(() => inflightRequests.delete(dedupKey));
+  }
+
+  return promise;
 }
