@@ -144,6 +144,78 @@ export interface FlashSaleReplicationResponse {
   execution: FlashSaleExecution | null;
 }
 
+// --- New types for the /shopee/flash-sales endpoints ---
+
+export interface ActiveFlashSale {
+  flashSaleId: number;
+  flashSaleName: string;
+  startTime: number; // Unix seconds — multiply by 1000 for JS Date
+  endTime: number;   // Unix seconds
+  status?: number;
+}
+
+export interface ReplicationExecutionResult {
+  id: number;
+  status: "SUCCESS" | "PARTIAL_SUCCESS" | "ERROR";
+  targetDate: string;         // "YYYY-MM-DD"
+  createdCampaigns: number;   // 0 or 1
+  errorsCount: number;
+  errorMessage: string | null;
+}
+
+export interface ReplicationResult {
+  skipped: boolean;
+  reason?: string;
+  execution?: ReplicationExecutionResult;
+  targetDate: string;
+  createdCampaigns: number;
+  errors: string[];
+}
+
+export interface LatestShopeeFlashSaleExecution {
+  id: number;
+  status: "RUNNING" | "SUCCESS" | "PARTIAL_SUCCESS" | "ERROR";
+  targetDate: string;
+  createdCampaigns: number;
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+export type FlashSaleHistoryStatus = "SUCCESS" | "ERROR" | "SKIPPED";
+
+export interface FlashSaleHistoryItem {
+  id: number;
+  executionId: number;
+  userId: number;
+  sourceFlashSaleId: number;
+  targetFlashSaleId: number | null;
+  flashSaleName: string;
+  targetDate: string;
+  status: FlashSaleHistoryStatus;
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+export interface PaginatedFlashSaleHistory {
+  items: FlashSaleHistoryItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface FlashSaleExecutionSummary {
+  id: number;
+  startedAt: string;
+  finishedAt: string | null;
+  status: string;
+  sourceCampaigns: number;
+  createdCampaigns: number;
+  skippedCampaigns: number;
+  targetDate: string;
+}
+
+// --- End new types ---
+
 export interface StockUpdateHistoryItem {
   id: number;
   executionId: number;

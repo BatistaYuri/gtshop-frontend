@@ -6,6 +6,7 @@ export const ROUTES = {
   dashboard: "/dashboard",
   stock: "/stock",
   flashSales: "/flash-sales",
+  flashSalesHistory: "/flash-sales/history",
   shopee: "/shopee",
   shopeeCallback: "/shopee/callback",
 } as const;

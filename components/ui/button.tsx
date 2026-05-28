@@ -1,6 +1,6 @@
 "use client";
 
-import type { ButtonHTMLAttributes } from "react";
+import { Children, cloneElement, isValidElement, type ButtonHTMLAttributes, type ReactElement } from "react";
 import { cn } from "@/lib/utils";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "subtle";
@@ -29,25 +29,45 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   fullWidth?: boolean;
+  asChild?: boolean;
 }
 
 export function Button({
+  children,
   className,
   variant = "primary",
   size = "md",
   fullWidth = false,
+  asChild = false,
   ...props
 }: ButtonProps) {
+  const classes = cn(
+    "inline-flex touch-manipulation items-center justify-center gap-2 rounded-2xl font-semibold transition duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+    variantClasses[variant],
+    sizeClasses[size],
+    fullWidth && "w-full",
+    className,
+  );
+
+  if (asChild) {
+    const child = Children.only(children);
+
+    if (!isValidElement(child)) {
+      return null;
+    }
+
+    return cloneElement(child as ReactElement<{ className?: string }>, {
+      className: cn(classes, (child.props as { className?: string }).className),
+      ...props,
+    });
+  }
+
   return (
     <button
-      className={cn(
-        "inline-flex touch-manipulation items-center justify-center gap-2 rounded-2xl font-semibold transition duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
-        variantClasses[variant],
-        sizeClasses[size],
-        fullWidth && "w-full",
-        className,
-      )}
+      className={classes}
       {...props}
-    />
+    >
+      {children}
+    </button>
   );
 }
