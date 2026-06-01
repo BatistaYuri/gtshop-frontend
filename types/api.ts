@@ -282,3 +282,87 @@ export interface ApiErrorResponse {
   statusCode?: number;
   details?: unknown;
 }
+
+export type ReportsPeriodDays = 7 | 30 | 90;
+
+export interface ReportsExecutionCounters {
+  total?: number;
+  success?: number;
+  partialSuccess?: number;
+  error?: number;
+}
+
+export interface ReportsDurationsMs {
+  avgTotal?: number;
+  p95Total?: number;
+  maxTotal?: number;
+}
+
+export interface ReportsStockOverview {
+  executions?: ReportsExecutionCounters;
+  counters?: {
+    entitiesConsidered?: number;
+    updatesSent?: number;
+    updatesSucceeded?: number;
+    noOpSkipped?: number;
+    errors?: number;
+  };
+  apiCalls?: {
+    getActiveProducts?: number;
+    getModels?: number;
+    getItemStockInfo?: number;
+    updateProductStock?: number;
+  };
+  durationsMs?: ReportsDurationsMs;
+  latestExecutionAt?: string | null;
+}
+
+export interface ReportsFlashSaleOverview {
+  executions?: ReportsExecutionCounters;
+  counters?: {
+    sourceCampaigns?: number;
+    createdCampaigns?: number;
+    skippedCampaigns?: number;
+    skippedBecauseDuplicate?: number;
+    skippedBecauseNoItems?: number;
+    addItemsRequests?: number;
+    addItemsRequestedItems?: number;
+    addItemsVerifiedPresentAfterFailure?: number;
+    errors?: number;
+  };
+  apiCalls?: {
+    listCampaigns?: number;
+    getFlashSale?: number;
+    getFlashSaleItems?: number;
+    getTimeSlotId?: number;
+    createShopFlashSale?: number;
+    addShopFlashSaleItems?: number;
+    verifyFlashSaleItemIds?: number;
+  };
+  retries?: {
+    networkRetries?: number;
+  };
+  durationsMs?: ReportsDurationsMs;
+  latestExecutionAt?: string | null;
+}
+
+export interface ReportsOverviewResponse {
+  periodDays?: number;
+  stock?: ReportsStockOverview;
+  flashSale?: ReportsFlashSaleOverview;
+}
+
+export interface ReportsTimelineItem {
+  day: string;
+  stock_updates_succeeded?: number;
+  stock_no_op_skipped?: number;
+  stock_errors?: number;
+  flash_created_campaigns?: number;
+  flash_skipped_campaigns?: number;
+  flash_errors?: number;
+}
+
+export interface ReportsTimelineResponse {
+  periodDays?: number;
+  items?: ReportsTimelineItem[];
+}

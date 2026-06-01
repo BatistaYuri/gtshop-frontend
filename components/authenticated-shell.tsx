@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogOut, Menu, Settings2, Store, Zap, X } from "lucide-react";
+import { BarChart3, LayoutDashboard, LogOut, Menu, Settings2, Store, Zap, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LoadingScreen } from "@/components/ui/loading-screen";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 const navigation = [
   { href: ROUTES.dashboard, label: "Dashboard", icon: LayoutDashboard },
+  { href: ROUTES.reports, label: "Relatorios", icon: BarChart3 },
   { href: ROUTES.stock, label: "Estoque", icon: Settings2 },
   { href: ROUTES.flashSales, label: "Oferta Relampago", icon: Zap },
   { href: ROUTES.shopee, label: "Shopee", icon: Store },

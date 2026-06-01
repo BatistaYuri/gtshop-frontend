@@ -4,6 +4,7 @@ export const SESSION_DURATION_SECONDS = 60 * 60 * 8;
 export const ROUTES = {
   login: "/login",
   dashboard: "/dashboard",
+  reports: "/reports",
   stock: "/stock",
   flashSales: "/flash-sales",
   flashSalesHistory: "/flash-sales/history",

@@ -77,6 +77,7 @@ Contem as rotas do App Router.
 
 - `/login`
 - `/dashboard`
+- `/reports`
 - `/stock`
 - `/shopee`
 - `/shopee/callback`
@@ -156,6 +157,18 @@ Se no futuro o backend puder emitir cookie seguro HTTP-only, esta e a evolucao n
 3. A Shopee ou o backend redireciona para `/shopee/callback` com os parametros de retorno.
 4. A tela de callback envia esses dados ao backend via `POST /shopee/callback` e exibe uma confirmacao ao usuario.
 5. O usuario pode seguir para `/shopee` e conferir o estado atualizado da integracao.
+
+## Relatorios e menu lateral
+
+A pagina de relatorios operacionais fica em `/reports` e ja esta integrada no menu lateral autenticado.
+
+Arquivos de integracao:
+
+- `lib/constants.ts`: inclui `ROUTES.reports`
+- `components/authenticated-shell.tsx`: adiciona o item "Relatorios" na navegacao
+- `app/(authenticated)/reports/page.tsx`: pagina principal com cards, graficos e tabela diaria
+
+Se precisar ajustar o menu no futuro, mantenha a rota em `ROUTES` e altere apenas o array `navigation` no shell autenticado.
 
 ## Cliente HTTP e erros
 
